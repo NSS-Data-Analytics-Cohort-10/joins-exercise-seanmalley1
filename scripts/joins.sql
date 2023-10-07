@@ -92,4 +92,13 @@ LIMIT 5
 
 -- 6. How many movies in the dataset are distributed by a company which is not headquartered in California? Which of these movies has the highest imdb rating?
 
+SELECT COUNT(film_title), headquarters, company_name
+FROM specs
+FULL JOIN distributors ON domestic_distributor_id = distributor_id
+FULL JOIN rating
+USING (movie_id)
+WHERE headquarters NOT LIKE '%CA%'
+GROUP BY headquarters, company_name
+
+
 -- 7. Which have a higher average rating, movies which are over two hours long or movies which are under two hours?
