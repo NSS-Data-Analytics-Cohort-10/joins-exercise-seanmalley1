@@ -77,6 +77,18 @@ GROUP BY distributors.company_name
 ORDER BY COUNT(specs.film_title) DESC
 
 -- 5. Write a query that returns the five distributors with the highest average movie budget.
+SELECT *
+from specs
+
+SELECT distributors.company_name, AVG(revenue.film_budget) as avg_film_budget
+FROM specs
+INNER JOIN revenue USING (movie_id)
+INNER JOIN distributors ON specs.domestic_distributor_id = distributors.distributor_id
+GROUP BY distributors.company_name
+ORDER BY avg_film_budget DESC
+LIMIT 5
+
+
 
 -- 6. How many movies in the dataset are distributed by a company which is not headquartered in California? Which of these movies has the highest imdb rating?
 
