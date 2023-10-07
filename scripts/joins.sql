@@ -29,11 +29,52 @@ ORDER BY worldwide_gross ASC
 
 
 -- 2. What year has the highest average imdb rating?
+SELECT AVG(rating.imdb_rating), specs.release_year
+FROM SPECS
+INNER JOIN rating
+-- ON specs.movie_id = rating.movie_id
+USING(movie_id)
+GROUP BY release_year
+ORDER BY AVG(rating.imdb_rating) DESC
 
--- 3. What is the highest grossing G-rated movie? Which company distributed it?
+-- 3. What is the highest grossing G-rated movie? Toy Story Which company distributed it?
+--part 1
+SELECT specs.film_title
+FROM specs
+LEFT JOIN revenue
+USING(movie_id)
+WHERE specs.mpaa_rating = 'G'
+GROUP BY revenue.worldwide_gross, specs.film_title
+ORDER BY revenue.worldwide_gross DESC
+
+SELECT COUNT(*)
+FROM specs
+
+-- Toy Story
+--part 2
+
+SELECT film_title, company_name, worldwide_gross
+FROM specs
+INNER JOIN revenue
+USING(movie_id)
+INNER JOIN distributors
+ON specs.domestic_distributor_id = distributors.distributor_id
+WHERE specs.mpaa_rating = 'G'
+GROUP BY film_title, company_name, worldwide_gross
+ORDER BY revenue.worldwide_gross DESC
+
+
+-- Answer: Walt Disney
 
 -- 4. Write a query that returns, for each distributor in the distributors table, the distributor name and the number of movies associated with that distributor in the movies 
 -- table. Your result set should include all of the distributors, whether or not they have any movies in the movies table.
+
+SELECT distributors.company_name, COUNT(specs.film_title)
+FROM specs
+INNER JOIN distributors
+ON specs.domestic_distributor_id = distributors.distributor_id
+GROUP BY distributors.company_name
+ORDER BY COUNT(specs.film_title) DESC
 
 -- 5. Write a query that returns the five distributors with the highest average movie budget.
 
